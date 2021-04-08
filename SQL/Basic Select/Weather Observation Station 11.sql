@@ -1,0 +1,1 @@
+SELECT DISTINCT City FROM Station WHERE City NOT LIKE '[aeiouAEIOU]%[aeiouAEIOU]'
