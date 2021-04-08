@@ -1,0 +1,4 @@
+SELECT DISTINCT City FROM Station
+WHERE City NOT LIKE '[aeiouAEIOU]%'
+AND CITY NOT LIKE '%[aeiouAEIOU]'
+GO
