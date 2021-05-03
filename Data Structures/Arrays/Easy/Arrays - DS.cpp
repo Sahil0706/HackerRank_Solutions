@@ -2,45 +2,75 @@
 
 using namespace std;
 
-vector<string> split_string(string);
+string ltrim(const string &);
+string rtrim(const string &);
+vector<string> split(const string &);
 
-// Complete the reverseArray function below.
-vector<int> reverseArray(vector<int> a) {
-    int n = a.size();
-    vector<int>b(n);
-    for(int i=0; i<n ;i++)
-        b[i] = a[n-i-1];
-    return b;
+/*
+ * Complete the 'dynamicArray' function below.
+ *
+ * The function is expected to return an INTEGER_ARRAY.
+ * The function accepts following parameters:
+ *  1. INTEGER n
+ *  2. 2D_INTEGER_ARRAY queries
+ */
+
+vector<int> dynamicArray(int n, vector<vector<int>> queries) {
+    vector<vector<int>>Sol(n);
+    int last =0;
+    int len = queries.size();
+    vector <int> ans;
+    for(int i=0; i<len; i++){
+        int k = (last ^ queries[i][1])%n;
+        if(queries[i][0]==1){
+            Sol[k].push_back(queries[i][2]);
+        }
+        else if(queries[i][0]==2){
+            int ind = queries[i][2]%(Sol[k].size());
+            last = Sol[k][ind];
+            ans.push_back(last);
+        }
+    }
+    return ans;
 }
 
 int main()
 {
     ofstream fout(getenv("OUTPUT_PATH"));
 
-    int arr_count;
-    cin >> arr_count;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    string first_multiple_input_temp;
+    getline(cin, first_multiple_input_temp);
 
-    string arr_temp_temp;
-    getline(cin, arr_temp_temp);
+    vector<string> first_multiple_input = split(rtrim(first_multiple_input_temp));
 
-    vector<string> arr_temp = split_string(arr_temp_temp);
+    int n = stoi(first_multiple_input[0]);
 
-    vector<int> arr(arr_count);
+    int q = stoi(first_multiple_input[1]);
 
-    for (int i = 0; i < arr_count; i++) {
-        int arr_item = stoi(arr_temp[i]);
+    vector<vector<int>> queries(q);
 
-        arr[i] = arr_item;
+    for (int i = 0; i < q; i++) {
+        queries[i].resize(3);
+
+        string queries_row_temp_temp;
+        getline(cin, queries_row_temp_temp);
+
+        vector<string> queries_row_temp = split(rtrim(queries_row_temp_temp));
+
+        for (int j = 0; j < 3; j++) {
+            int queries_row_item = stoi(queries_row_temp[j]);
+
+            queries[i][j] = queries_row_item;
+        }
     }
 
-    vector<int> res = reverseArray(arr);
+    vector<int> result = dynamicArray(n, queries);
 
-    for (int i = 0; i < res.size(); i++) {
-        fout << res[i];
+    for (int i = 0; i < result.size(); i++) {
+        fout << result[i];
 
-        if (i != res.size() - 1) {
-            fout << " ";
+        if (i != result.size() - 1) {
+            fout << "\n";
         }
     }
 
@@ -51,31 +81,41 @@ int main()
     return 0;
 }
 
-vector<string> split_string(string input_string) {
-    string::iterator new_end = unique(input_string.begin(), input_string.end(), [] (const char &x, const char &y) {
-        return x == y and x == ' ';
-    });
+string ltrim(const string &str) {
+    string s(str);
 
-    input_string.erase(new_end, input_string.end());
+    s.erase(
+        s.begin(),
+        find_if(s.begin(), s.end(), not1(ptr_fun<int, int>(isspace)))
+    );
 
-    while (input_string[input_string.length() - 1] == ' ') {
-        input_string.pop_back();
+    return s;
+}
+
+string rtrim(const string &str) {
+    string s(str);
+
+    s.erase(
+        find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(),
+        s.end()
+    );
+
+    return s;
+}
+
+vector<string> split(const string &str) {
+    vector<string> tokens;
+
+    string::size_type start = 0;
+    string::size_type end = 0;
+
+    while ((end = str.find(" ", start)) != string::npos) {
+        tokens.push_back(str.substr(start, end - start));
+
+        start = end + 1;
     }
 
-    vector<string> splits;
-    char delimiter = ' ';
+    tokens.push_back(str.substr(start));
 
-    size_t i = 0;
-    size_t pos = input_string.find(delimiter);
-
-    while (pos != string::npos) {
-        splits.push_back(input_string.substr(i, pos - i));
-
-        i = pos + 1;
-        pos = input_string.find(delimiter, i);
-    }
-
-    splits.push_back(input_string.substr(i, min(pos, input_string.length()) - i + 1));
-
-    return splits;
+    return tokens;
 }
