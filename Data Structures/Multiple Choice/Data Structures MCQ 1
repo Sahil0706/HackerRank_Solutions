@@ -1,0 +1,11 @@
+If we have a tree of n nodes, how many edges will it have?
+
+🔴  1
+🔴  (n*(n-1))/2
+🔴  (n*(n-1))
+🟢  n-1 ✔
+
+
+=======================
+n-1 is correct option.
+=======================
