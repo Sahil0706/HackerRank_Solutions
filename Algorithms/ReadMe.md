@@ -1,4 +1,4 @@
-#Problems are solved in C++, C#, Python3.
+Problems are solved in C++, C#, Python3.
 
 C++ Solutions are named as solution.cpp
 
