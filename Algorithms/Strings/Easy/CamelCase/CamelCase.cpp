@@ -10,7 +10,14 @@ using namespace std;
  */
 
 int camelcase(string s) {
-
+    int c=0;
+    for(auto i:s){
+        if(i>='A' && i<='Z')
+            c++;
+    }
+    if(s.length())
+        c++;
+    return c;
 }
 
 int main()
